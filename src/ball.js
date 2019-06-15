@@ -1,17 +1,11 @@
 export default class Ball {
-  constructor(game) {
+  constructor(game, color) {
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
 
-    this.color = "#336699";
+    this.color = color;
     this.game = game;
     this.size = 10;
-    this.reset();
-  }
-
-  reset() {
-    this.position = { x: 400, y: 400 };
-    this.speed = { x: 10, y: -10 };
   }
 
   draw(ctx) {
