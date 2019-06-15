@@ -1,3 +1,5 @@
+import { detectCollisionBetween } from "/src/collision";
+
 export default class Ball {
   constructor(game, color) {
     this.gameWidth = game.gameWidth;
@@ -5,7 +7,7 @@ export default class Ball {
 
     this.color = color;
     this.game = game;
-    this.size = 10;
+    this.size = 50;
   }
 
   draw(ctx) {
@@ -16,6 +18,18 @@ export default class Ball {
     ctx.fill();
     ctx.stroke();
     ctx.restore();
+  }
+
+  detectCollision() {
+    //console.log(this.game.gameObjects);
+    let others = this.game.gameObjects.filter(
+      f => f.position.x !== this.position.x && f.position.y !== this.position.y
+    );
+
+    if (detectCollisionBetween(this, others[0])) {
+      this.speed.y = -this.speed.y;
+      this.speed.x = -this.speed.x;
+    }
   }
 
   update(deltaTime) {
