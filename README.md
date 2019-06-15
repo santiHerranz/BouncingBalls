@@ -1,2 +1,0 @@
-# BouncingBalls
-Created with CodeSandbox
