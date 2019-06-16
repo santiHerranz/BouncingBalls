@@ -6,14 +6,14 @@ export default class Game {
     this.gameHeight = gameHeight;
 
     this.gameObjects = [
-      new Ball(this, "#f00"),
-      //new Ball(this, "#033"),
-      //new Ball(this, "#330"),
-      new Ball(this, "#0f0"),
-      //new Ball(this, "#060"),
-      //new Ball(this, "#006"),
-      //new Ball(this, "#606"),
-      new Ball(this, "#66f")
+      new Ball(this, 20, "#f00"),
+      new Ball(this, 20, "#0ff"),
+      new Ball(this, 20, "#ff0"),
+      new Ball(this, 20, "#0f0"),
+      new Ball(this, 20, "#060"),
+      new Ball(this, 20, "#006"),
+      new Ball(this, 20, "#606"),
+      new Ball(this, 20, "#660")
     ];
 
     this.start();
