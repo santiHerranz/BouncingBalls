@@ -1,5 +1,3 @@
-import { detectCollisionBetween } from "/src/collision";
-
 export default class Ball {
   constructor(game, size, color) {
     this.gameWidth = game.gameWidth;
@@ -20,35 +18,23 @@ export default class Ball {
     ctx.restore();
   }
 
-  detectCollision() {
-    //console.log(this.game.gameObjects);
-    let others = this.game.gameObjects.filter(
-      f => f.position.x !== this.position.x && f.position.y !== this.position.y
-    );
-
-    if (detectCollisionBetween(this, others[0])) {
-      this.speed.y = -this.speed.y;
-      this.speed.x = -this.speed.x;
-    }
-  }
-
   update(deltaTime) {
-    this.position.x += this.speed.x;
-    this.position.y += this.speed.y;
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
-    // wall on left or right
+    /*     // wall on left or right
     if (this.position.x + this.size > this.gameWidth || this.position.x < 0) {
-      this.speed.x = -this.speed.x;
+      this.velocity.x = -this.velocity.x;
     }
 
     // wall on top
     if (this.position.y < 0) {
-      this.speed.y = -this.speed.y;
+      this.velocity.y = -this.velocity.y;
     }
 
     // bottom of game
     if (this.position.y + this.size > this.gameHeight) {
-      this.speed.y = -this.speed.y;
-    }
+      this.velocity.y = -this.velocity.y;
+    } */
   }
 }

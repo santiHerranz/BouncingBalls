@@ -4,9 +4,6 @@ import Game from "/src/game";
 let canvas = document.getElementById("gameScreen");
 let ctx = canvas.getContext("2d");
 
-const GAME_WIDTH = 600;
-const GAME_HEIGHT = 600;
-
 /*
 let game = new Game(GAME_WIDTH, GAME_HEIGHT);
  
@@ -44,6 +41,7 @@ export default class Tank {
     this.canvas.width = width;
     this.canvas.height = height;
     this.player = null;
+    this.oneBall = null;
 
     this.up = false;
     this.down = false;
@@ -72,7 +70,7 @@ export default class Tank {
     this.bvh_checkbox = this.element.querySelector("#bvh");
     this.element.appendChild(this.canvas);
 
-    let game = new Game(width, height);
+    this.game = new Game(width, height);
 
     this.createPlayer(400, 300);
     this.createMap(width, height);
@@ -87,8 +85,8 @@ export default class Tank {
 
       //ctx.clearRect(0, 0, width, height);
 
-      game.update(deltaTime);
-      game.draw(ctx);
+      this.game.update(deltaTime);
+      this.game.draw(ctx);
 
       requestAnimationFrame(frame);
     };
@@ -136,6 +134,9 @@ export default class Tank {
       this.player.x += x * this.player.velocity;
       this.player.y += y * this.player.velocity;
     }
+
+    this.oneBall.x = this.game.gameObjects[0].position.x;
+    this.oneBall.y = this.game.gameObjects[0].position.y;
   }
 
   handleCollisions() {
@@ -152,6 +153,24 @@ export default class Tank {
         this.player.velocity *= 0.9;
       }
     }
+
+    const potentials2 = this.oneBall.potentials();
+    // Negate any collisions
+    for (const body of potentials2) {
+      if (this.oneBall.collides(body, result)) {
+        this.oneBall.x -= result.overlap * result.overlap_x;
+        this.oneBall.y -= result.overlap * result.overlap_y;
+
+        this.oneBall.velocity.x = -2 * result.overlap_x;
+        this.oneBall.velocity.y = -2 * result.overlap_y;
+      }
+    }
+
+    this.game.gameObjects[0].position.x = this.oneBall.x;
+    this.game.gameObjects[0].position.y = this.oneBall.y;
+
+    this.game.gameObjects[0].velocity.x = this.oneBall.velocity.x;
+    this.game.gameObjects[0].velocity.y = this.oneBall.velocity.y;
   }
 
   render() {
@@ -172,8 +191,6 @@ export default class Tank {
   }
 
   createPlayer(x, y) {
-    const size = 15;
-
     this.player = this.collisions.createPolygon(
       x,
       y,
@@ -204,10 +221,23 @@ export default class Tank {
       [[-20, -20], [20, -20], [20, 20], [-20, 20]],
       0.4
     );
+    /* 
     this.collisions.createCircle(170, 140, 8);
     this.collisions.createCircle(185, 155, 8);
-    this.collisions.createCircle(165, 165, 8);
-    this.collisions.createCircle(145, 165, 8);
+    this.collisions.createCircle(165, 165, 8); 
+    this.collisions.createCircle(145, 165, 8); 
+    */
+
+    this.game.gameObjects.forEach(
+      ball =>
+        (this.oneBall = this.collisions.createCircle(
+          ball.position.x,
+          ball.position.y,
+          ball.size
+        ))
+    );
+
+    this.oneBall.velocity = { x: 2.0, y: 2.0 };
 
     // Airstrip
     this.collisions.createPolygon(
@@ -255,8 +285,8 @@ export default class Tank {
       [-20, -40],
       [30, -30],
       [60, 20],
-      [40, 70],
-      [10, 100],
+      [60, 70],
+      [40, 120],
       [-30, 110],
       [-80, 90],
       [-110, 50],
@@ -265,9 +295,9 @@ export default class Tank {
   }
 }
 
-function random(min, max) {
+/* function random(min, max) {
   return Math.floor(Math.random() * max) + min;
-}
+} */
 
 if (typeof exports !== "undefined") {
   exports = Tank;
