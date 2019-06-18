@@ -1,13 +1,13 @@
 import { detectCollisionBetween } from "/src/collision";
 
 export default class Ball {
-  constructor(game, color) {
+  constructor(game, size, color) {
     this.gameWidth = game.gameWidth;
     this.gameHeight = game.gameHeight;
 
+    this.size = size;
     this.color = color;
     this.game = game;
-    this.size = 50;
   }
 
   draw(ctx) {
